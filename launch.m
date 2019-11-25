@@ -1,78 +1,202 @@
 clc
 clear
+
+%%Initial conditions
+
 v=0; %initial velocity
+
 hh=0; %displacement (not really needed)
+
 h=0; %initial height
+
 tstart=0; %time 0
+
 dt=0.1; %timestep
+
+rho = 0.025
+
 t1=160; %time of stage 1 burn
+
 t2 = 460; % time of stage 2 burn
+
+t3 = 990  % time of stage 3 burn
+
 g= 9.81; % g
-F1 = 34000000; % stage 1 thrust
-F2 = 4900000; %stage 2 thrust 
+
+F1 = 35100000; % stage 1 thrust
+
+F2 = 5141000; %stage 2 thrust 
+
+F3 = 1028200; %stage 3 thrustm
+
 M = 2970000; % initial mass of ship
+
 matrix=zeros(4600,4); % create the matrix that holds all the data
+
 massflow1 = (2100000/160)*dt; % mass flow rate stage 1
+
 massflow2 = (444000/360)*dt; % mass flow rate stage  2
+
+massflow3 = (109000/530)*dt  % mass flow rate stage  3
+
 s=0 % variable to help index the matrix
-drag = 0.25*pi*5^2*0.05*v^2/2
-angle_turn = 1.3*(90/460)*dt % the angle that the ship turns at
+
+drag = 0
+
+angle_turn = 1.4*(90/460)*dt % the angle that the ship turns at
+
 angle = 0
+
 Mearth = 5.97219*10^24
-Radius_orbit = 185000
+
+orbit_dist = 191000
+
 G = 6.673*10^-11
-speed_for_orbit = sqrt((Mearth*G)/Radius_orbit) % speed needed for orbit 
-orbit_dist = 185000
+
+di = 51.57;
+
+speed_for_orbit = sqrt((Mearth*G)/(orbit_dist+6371000)) % speed needed for orbit 
+
 for t = tstart:dt:t1
-    a = getacceleration(F1,M,g,angle);
-    h= h + dt*v*cosd(angle); %calculating height and dispalcemt 
+
+    a = getacceleration(F1,M,g,angle,v,rho);
+
+    h = getheight(h,dt,v,angle); %calculating height and dispalcemt 
+    
+    rho = dencity(h)
+
     hh=hh+dt*v*sind(angle);
+
     v=v+dt*a;
+
     M = M - massflow1;
+
     matrix(1+s,1) = a; % these just update the matrix
+
     matrix(1+s,2) = v;
+
     matrix(1+s,3) = h;
+
     matrix(1+s,4) = angle;
+
     matrix(1+s,5) = hh;
+
     s=1+s;
+
     angle = angle + angle_turn;
+
                             % if the height is the target orbit height
+
                             % then turn the rocket paralell to the ground
-    if h > orbit_dist; 
-        angle = 90
-        angle_turn = 0
+
+    if h > orbit_dist
+
+        angle = 90;
+
+        angle_turn = 0;
+
     end
+
     if cosd(angle) < 0 % stop rotating the rocket once it is paralell
-        angle_turn = 0
+
+        angle_turn = 0;
+
     end
+
     if v > speed_for_orbit % once the speed is the orbit soeed then stop accelerating
-        F1 = 0
+
+        F1 = 0;
+
     end
+
 end
+M = M - 200000 %loss of first stage
+
 for t = t1:dt:t2
-     a = getacceleration(F2,M,g,angle); % this looop is the same as the firist one bit for the secind stage 
-    h= h + dt*v*cosd(angle);
+
+     a = getacceleration(F2,M,g,angle,v,rho); % this looop is the same as the firist one bit for the secind stage 
+
+    h = getheight(h,dt,v,angle);
+    
+    rho = dencity(h)
+
     hh=hh+dt*v*sind(angle);
+
     v=v+dt*a;
+
     M = M - massflow2;
+
     matrix(1+s,1) = a;
+
     matrix(1+s,2) = v;
+
     matrix(1+s,3) = h;
+
     matrix(1+s,4) = angle;
+
     matrix(1+s,5) = hh;
+
     s=1+s;
+
     angle = angle + angle_turn;
+
     if h > orbit_dist;
-        angle = 90
-        angle_turn = 0
+
+        angle = 90;
+
+        angle_turn = 0;
+
     end
+
     if cosd(angle) < 0
-        angle_turn = 0
+
+        angle_turn = 0;
+
     end
+
     if v > speed_for_orbit
-        F2 = 0
+
+        F2 = 0;
+
     end
+
 end
+
+M=M-109000
+
+for t = t2:dt:t3
+
+    a = getacceleration(F3,M,g,angle,v,rho); % this looop is the same as the firist one bit for the secind stage 
+    h = getheight(h,dt,v,angle);
+
+    rho = dencity(h)
+    
+    hh=hh+dt*v*sind(angle);
+
+    v=v+dt*a;
+
+    M = M - massflow3;
+
+    matrix(1+s,1) = a;
+
+    matrix(1+s,2) = v;
+
+    matrix(1+s,3) = h;
+
+    matrix(1+s,4) = angle;
+
+    matrix(1+s,5) = hh;
+
+    s=1+s;
+
+    if v > speed_for_orbit
+
+        F3 = 0;
+
+    end
+
+end
+dv = 2*v*sin(di/2)
 figure (1)
 plot(matrix(:,1))
 title('acceleration')
