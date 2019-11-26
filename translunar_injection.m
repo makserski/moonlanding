@@ -1,10 +1,11 @@
-%function [X_COORD, Y_COORD] = translunar_injection
+function [X_COORD, Y_COORD] = translunar_injection()
 
     EARTH_ORBIT = 6569.3e3; % Parking orbit of the Earth
     MOON_ORBIT = 1848e3; % Orbit of the Moon
     EARTH_MOON_DIST = 384400e3; % Distance from the Earth to the Moon
     X_COORD(1) = 0; % Starting point at x=0
     Y_COORD(1) = 0; % Starting point at y=0
+    %G = 6.673e-11;
     
     % Initialise the time array
     dt = 1;
@@ -31,18 +32,38 @@
     dE = pi/10300;
     E = 0:dE:pi; % This assumes a constant angular velocity about the centre point of the big circle
 
-    for i = 1:length(TIME)-1
+    %MASS_EARTH = 5.9724e24;
+    
+    for i = 1:length(TIME)
 
         TRUE_ANOMALY(i) = 2*atan(sqrt((1+ECCENTRICITY)/(1-ECCENTRICITY)).*tan((E(i))/2));
-        r = (SEMI_MAJOR_AXIS*(1+ECCENTRICITY^2))./(1+ECCENTRICITY.*cos(TRUE_ANOMALY(i)));
+        r(i) = (SEMI_MAJOR_AXIS*(1+ECCENTRICITY^2))./(1+ECCENTRICITY.*cos(TRUE_ANOMALY(i)));
         
-        X_COORD(i+1) = r.*(cos(TRUE_ANOMALY(i) + ARG_PERICENTRE)*cos(ASCENDING_NODE) - ...
+        X_COORD(i+1) = r(i).*(cos(TRUE_ANOMALY(i) + ARG_PERICENTRE)*cos(ASCENDING_NODE) - ...
         sin(TRUE_ANOMALY(i) + ARG_PERICENTRE)*sin(ASCENDING_NODE)*cos(INCLINATION));
         
-        Y_COORD(i+1) = r.*(cos(TRUE_ANOMALY(i) + ARG_PERICENTRE)*sin(ASCENDING_NODE) + ...
+        Y_COORD(i+1) = r(i).*(cos(TRUE_ANOMALY(i) + ARG_PERICENTRE)*sin(ASCENDING_NODE) + ...
         sin(TRUE_ANOMALY(i) + ARG_PERICENTRE)*cos(ASCENDING_NODE)*cos(INCLINATION));
+        
+        %add comments here
+    
+        %VELOCITY(i) = sqrt((MASS_EARTH*G).*((2/r(i))-(1/SEMI_MAJOR_AXIS)));
         
     end
     
+    INITIAL_ERROR_X = X_COORD(2)-X_COORD(1);
+    
+    for i = 1:length(X_COORD)-1
+        X_COORD(i+1) = X_COORD(i+1) - INITIAL_ERROR_X;
+    end
+    
+    INITIAL_ERROR_Y = Y_COORD(2)-Y_COORD(1);
+    
+    for i = 1:length(Y_COORD)-1
+        Y_COORD(i+1) = Y_COORD(i+1) - INITIAL_ERROR_Y;
+    end
+    
+    comet(X_COORD,Y_COORD);
+    
     % Draw x and y which represent the path of the rocket in 2D
-%end
+    end
