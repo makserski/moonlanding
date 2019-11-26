@@ -1,11 +1,11 @@
-function [X_COORD, Y_COORD] = translunar_injection()
+%function [X_COORD, Y_COORD] = translunar_injection()
 
     EARTH_ORBIT = 6569.3e3; % Parking orbit of the Earth
     MOON_ORBIT = 1848e3; % Orbit of the Moon
     EARTH_MOON_DIST = 384400e3; % Distance from the Earth to the Moon
     X_COORD(1) = 0; % Starting point at x=0
     Y_COORD(1) = 0; % Starting point at y=0
-    %G = 6.673e-11;
+    G = 6.673e-11;
     
     % Initialise the time array
     dt = 1;
@@ -32,7 +32,7 @@ function [X_COORD, Y_COORD] = translunar_injection()
     dE = pi/10300;
     E = 0:dE:pi; % This assumes a constant angular velocity about the centre point of the big circle
 
-    %MASS_EARTH = 5.9724e24;
+    MASS_EARTH = 5.9724e24;
     
     for i = 1:length(TIME)
 
@@ -62,8 +62,17 @@ function [X_COORD, Y_COORD] = translunar_injection()
     for i = 1:length(Y_COORD)-1
         Y_COORD(i+1) = Y_COORD(i+1) - INITIAL_ERROR_Y;
     end
+    %figure(1)
+    %comet(X_COORD,Y_COORD)
     
-    comet(X_COORD,Y_COORD);
-    
-    % Draw x and y which represent the path of the rocket in 2D
+    %VELOCITY(1) = 7.7889e+03;
+    for i = 1:length(TIME)-1
+        R(i) = sqrt((Y_COORD(i).^2)+((X_COORD(i)-EARTH_ORBIT).^2));
+        VELOCITY(i+1) = sqrt((MASS_EARTH*G).*((2/R(i))-(1/SEMI_MAJOR_AXIS)));
     end
+    figure(2)
+    plot(TIME,VELOCITY)
+    % Draw x and y which represent the path of the rocket in 2D
+%end
+    va = sqrt(((G*MASS_EARTH)/SEMI_MAJOR_AXIS)*((1-ECCENTRICITY)/(1+ECCENTRICITY)))
+    vp = sqrt(((G*MASS_EARTH)/SEMI_MAJOR_AXIS)*((1+ECCENTRICITY)/(1-ECCENTRICITY)))
