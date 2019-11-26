@@ -49,13 +49,15 @@ angle = 0;
 
 Mearth = 5.97219*10^24;
 
-orbit_dist = 191000;
+orbit_dist = 198300;
 
 G = 6.673*10^-11;
 
 di = 51.57;
 
 speed_for_orbit = sqrt((Mearth*G)/(orbit_dist+6371000)); % speed needed for orbit 
+
+totalT =0
 
 for t = tstart:dt:t1
 
@@ -71,9 +73,11 @@ for t = tstart:dt:t1
 
     M = M - massflow1;
 
-    matrix = updatetable(s,a,v,h,angle,hh,matrix);
+    matrix = updatetable(s,a,v,h,angle,hh,totalT,matrix);
     
     s=1+s;
+    
+    totalT=totalT+dt;
 
     angle = angle + angle_turn;
 
@@ -118,8 +122,9 @@ for t = t1:dt:t2
 
     M = M - massflow2;
 
-    matrix = updatetable(s,a,v,h,angle,hh,matrix);
+    matrix = updatetable(s,a,v,h,angle,hh,totalT,matrix);
 
+    totalT=totalT+dt;
     s=1+s;
 
     angle = angle + angle_turn;
@@ -161,9 +166,10 @@ for t = t2:dt:t3
 
     M = M - massflow3;
 
-    matrix = updatetable(s,a,v,h,angle,hh,matrix);
+    matrix = updatetable(s,a,v,h,angle,hh,totalT,matrix);
 
     s=1+s;
+    totalT=totalT+dt;
     
     if h > orbit_dist
 
@@ -190,7 +196,6 @@ end
 
 dv = 2*v*sin(di/2); % velocity change to alter incliantion or orbit
 fprintf('to change the inclination of the orbit to one around the equator a velocity change of  %d m/s must be made towards the equator\n', dv);
-
 
 figure (1)
 
