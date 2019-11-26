@@ -23,12 +23,12 @@ M = 4700; % initial mass of ship
 
 matrix=zeros(4600,4); % create the matrix that holds all the data
 
-massflow1 = 2250/t1
+massflow1 = dt*2250/615
 s=0 % variable to help index the matrix
 
 drag = 0
 
-angle_turn = 0.98*(90/435)*dt % the angle that the ship turns at
+angle_turn = 1.5*(90/650)*dt % the angle that the ship turns at
 
 angle = 0
 
@@ -52,7 +52,7 @@ for t = tstart:dt:t1
 
     v=v+dt*a;
 
-   % M = M - massflow1;
+    M = M - massflow1;
 
     matrix(1+s,1) = a; % these just update the matrix
 
