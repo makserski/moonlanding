@@ -13,13 +13,13 @@ tstart=0; %time 0
 
 dt=0.1; %timestep
 
-rho = 0.025
+rho = 0;
 
 t1=160; %time of stage 1 burn
 
 t2 = 460; % time of stage 2 burn
 
-t3 = 990  % time of stage 3 burn
+t3 = 990 ; % time of stage 3 burn
 
 g= 9.81; % g
 
@@ -31,31 +31,31 @@ F3 = 1028200; %stage 3 thrustm
 
 M = 2970000; % initial mass of ship
 
-matrix=zeros(4600,4); % create the matrix that holds all the data
+matrix=zeros(1,4); % create the matrix that holds all the data
 
 massflow1 = (2100000/160)*dt; % mass flow rate stage 1
 
 massflow2 = (444000/360)*dt; % mass flow rate stage  2
 
-massflow3 = (109000/530)*dt  % mass flow rate stage  3
+massflow3 = (109000/530)*dt;  % mass flow rate stage  3
 
-s=0 % variable to help index the matrix
+s=0 ;% variable to help index the matrix
 
-drag = 0
+drag = 0;
 
-angle_turn = 1.4*(90/460)*dt % the angle that the ship turns at
+angle_turn = 1.4*(90/460)*dt; % the angle that the ship turns at
 
-angle = 0
+angle = 0;
 
-Mearth = 5.97219*10^24
+Mearth = 5.97219*10^24;
 
-orbit_dist = 191000
+orbit_dist = 191000;
 
-G = 6.673*10^-11
+G = 6.673*10^-11;
 
 di = 51.57;
 
-speed_for_orbit = sqrt((Mearth*G)/(orbit_dist+6371000)) % speed needed for orbit 
+speed_for_orbit = sqrt((Mearth*G)/(orbit_dist+6371000)); % speed needed for orbit 
 
 for t = tstart:dt:t1
 
@@ -63,7 +63,7 @@ for t = tstart:dt:t1
 
     h = getheight(h,dt,v,angle); %calculating height and dispalcemt 
     
-    rho = dencity(h)
+    rho = density(h);
 
     hh=hh+dt*v*sind(angle);
 
@@ -71,16 +71,8 @@ for t = tstart:dt:t1
 
     M = M - massflow1;
 
-    matrix(1+s,1) = a; % these just update the matrix
-
-    matrix(1+s,2) = v;
-
-    matrix(1+s,3) = h;
-
-    matrix(1+s,4) = angle;
-
-    matrix(1+s,5) = hh;
-
+    matrix = updatetable(s,a,v,h,angle,hh,matrix);
+    
     s=1+s;
 
     angle = angle + angle_turn;
@@ -110,7 +102,7 @@ for t = tstart:dt:t1
     end
 
 end
-M = M - 200000 %loss of first stage
+M = M - 200000; %loss of first stage
 
 for t = t1:dt:t2
 
@@ -118,7 +110,7 @@ for t = t1:dt:t2
 
     h = getheight(h,dt,v,angle);
     
-    rho = dencity(h)
+    rho = density(h);
 
     hh=hh+dt*v*sind(angle);
 
@@ -126,21 +118,13 @@ for t = t1:dt:t2
 
     M = M - massflow2;
 
-    matrix(1+s,1) = a;
-
-    matrix(1+s,2) = v;
-
-    matrix(1+s,3) = h;
-
-    matrix(1+s,4) = angle;
-
-    matrix(1+s,5) = hh;
+    matrix = updatetable(s,a,v,h,angle,hh,matrix);
 
     s=1+s;
 
     angle = angle + angle_turn;
 
-    if h > orbit_dist;
+    if h > orbit_dist
 
         angle = 90;
 
@@ -162,14 +146,14 @@ for t = t1:dt:t2
 
 end
 
-M=M-109000
+M=M-109000;
 
 for t = t2:dt:t3
 
     a = getacceleration(F3,M,g,angle,v,rho); % this looop is the same as the firist one bit for the secind stage 
     h = getheight(h,dt,v,angle);
 
-    rho = dencity(h)
+    rho = density(h);
     
     hh=hh+dt*v*sind(angle);
 
@@ -177,17 +161,23 @@ for t = t2:dt:t3
 
     M = M - massflow3;
 
-    matrix(1+s,1) = a;
-
-    matrix(1+s,2) = v;
-
-    matrix(1+s,3) = h;
-
-    matrix(1+s,4) = angle;
-
-    matrix(1+s,5) = hh;
+    matrix = updatetable(s,a,v,h,angle,hh,matrix);
 
     s=1+s;
+    
+    if h > orbit_dist
+
+        angle = 90;
+
+        angle_turn = 0;
+
+    end
+
+    if cosd(angle) < 0
+
+        angle_turn = 0;
+
+    end
 
     if v > speed_for_orbit
 
@@ -196,29 +186,58 @@ for t = t2:dt:t3
     end
 
 end
-dv = 2*v*sin(di/2)
+
+
+dv = 2*v*sin(di/2); % velocity change to alter incliantion or orbit
+fprintf('to change the inclination of the orbit to one around the equator a velocity change of  %d m/s must be made towards the equator\n', dv);
+
+
 figure (1)
+
 plot(matrix(:,1))
+
 title('acceleration')
+
 xlabel('time (ms)')
+
 ylabel('acceleration')
+
 figure (2)
+
 plot(matrix(:,2))
+
 title('velocity time')
+
 xlabel('time (ms)')
+
 ylabel('velocity')
+
 figure (3)
+
 plot(matrix(:,3))
+
 title('height time')
+
 xlabel('time (ms)')
+
 ylabel('height ')
+
 figure (4)
+
 plot(matrix(:,4))
+
 title('angle of the rocket')
+
 xlabel('time (ms)')
+
 ylabel('angel ')
+
 figure (5)
+
 plot(matrix(:,5))
+
 title('displacement time')
+
 xlabel('time (ms)')
+
 ylabel('displacement')
