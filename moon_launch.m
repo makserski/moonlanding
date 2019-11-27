@@ -91,7 +91,7 @@ end
 
 figure (1)
 
-plot(matrixmoon(:,6),matrixmoon(:,1))
+plot(matrixmoon(:,6),matrixmoon(:,1)) %acceleration time 
 
 title('acceleration')
 
@@ -101,7 +101,7 @@ ylabel('acceleration')
 
 figure (2)
 
-plot(matrixmoon(:,6),matrixmoon(:,2))
+plot(matrixmoon(:,6),matrixmoon(:,2)) %velocity time
 
 title('velocity time')
 
@@ -111,7 +111,7 @@ ylabel('velocity')
 
 figure (3)
 
-plot(matrixmoon(:,6),matrixmoon(:,3))
+plot(matrixmoon(:,6),matrixmoon(:,3)) %height time
 
 title('height time')
 
@@ -121,7 +121,7 @@ ylabel('height ')
 
 figure (4)
 
-plot(matrixmoon(:,6),matrixmoon(:,4))
+plot(matrixmoon(:,6),matrixmoon(:,4)) %angle time
 
 title('angle of the rocket')
 
@@ -131,7 +131,7 @@ ylabel('angel ')
 
 figure (5)
 
-plot(matrixmoon(:,6),matrixmoon(:,5))
+plot(matrixmoon(:,6),matrixmoon(:,5)) %displacemtn time
 
 title('displacement time')
 
