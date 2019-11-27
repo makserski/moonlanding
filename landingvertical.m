@@ -7,7 +7,7 @@ g=1.62 %gravity
 M = 15200 %inital mass
 F1=14100 %thrust 1
 F2=26500 %thrust 2
-matrix=zeros(1,6)
+matrixland=zeros(1,6);
 t0= 0 
 dt =0.1 %timestep
 massflow=14.76*dt 
@@ -24,7 +24,7 @@ for t = t0:dt:time1
     h = getheight(h,dt,v,angle);
     v=v+dt*a;
     M = M - massflow;
-    matrix = updatetable(s,a,v,h,angle,hh,totalT,matrix);
+    matrixland = updatetable(s,a,v,h,angle,hh,totalT,matrixland);
     s=1+s; %iteration counter for mattrix 
     totalT=totalT+dt; %x axis (stops it plotting in ms) (look at the plot functions)
 end
@@ -34,14 +34,14 @@ for t = time1:dt:time2
     h = getheight(h,dt,v,angle);
     v=v+dt*a;
     M = M - massflow;
-    matrix = updatetable(s,a,v,h,angle,hh,totalT,matrix);
+    matrixland = updatetable(s,a,v,h,angle,hh,totalT,matrixland);
     s=1+s;
     totalT=totalT+dt;
 end
 
 figure (1)
 
-plot(matrix(:,6),matrix(:,1)) %plot time acceleration
+plot(matrixland(:,6),matrixland(:,1)) %plot time acceleration
 
 title('acceleration')
 
@@ -51,7 +51,7 @@ ylabel('acceleration')
 
 figure (2)
 
-plot(matrix(:,6),matrix(:,2)) %plot time velocity
+plot(matrixland(:,6),matrixland(:,2)) %plot time velocity
 
 title('velocity time')
 
@@ -61,7 +61,7 @@ ylabel('velocity')
 
 figure (3)
 
-plot(matrix(:,6),matrix(:,3)) %plot height time 
+plot(matrixland(:,6),matrixland(:,3)) %plot height time 
 
 title('height time')
 
