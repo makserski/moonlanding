@@ -1,4 +1,4 @@
-function [X_COORD, Y_COORD, VELOCITY, TIME] = translunar_injection()
+function [X_COORD, Y_COORD, VELOCITY, TIME] = translunar_injection(z)
 
     %clear all
     
@@ -12,7 +12,7 @@ function [X_COORD, Y_COORD, VELOCITY, TIME] = translunar_injection()
     MU = G*MASS_EARTH; % Standard gravitational parameter
     
     % Initialise the time array
-    dt = 5;
+    dt = 20;
     TIME = 0:dt:262763;
     
     % Calculating the geometrical properties of the elliptical orbit during
@@ -70,8 +70,7 @@ function [X_COORD, Y_COORD, VELOCITY, TIME] = translunar_injection()
         Y_COORD(i+1) = Y_COORD(i+1) - INITIAL_ERROR_Y;
     end
     
-    figure(1)
-    comet(X_COORD,Y_COORD)
+    comet(z,X_COORD,Y_COORD)
     
     % Constants and arrays required for the velocity calculation
     n = sqrt(MU/(SEMI_MAJOR_AXIS^3));
