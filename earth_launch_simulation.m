@@ -85,16 +85,18 @@ if nargout == 0
     %
     % Note that if you plot orbit trajectories in the Earth-Centered-
     % Inertial, the orientation of the contintents will be misleading.
-    topo2 = [topo(:,181:360) topo(:,1:180)]; %#ok<NODEF>
-    
+    %topo2 = [topo(:,181:360) topo(:,1:180)]; %#ok<NODEF>
+     topo2 = [topo(:,91:360) topo(:,1:90)]; %#ok<NODEF>
     % Define surface settings
     props.FaceColor= 'texture';
     props.EdgeColor = 'none';
     props.FaceLighting = 'phong';
     props.Cdata = topo2;
     % Create the sphere with Earth topography and adjust colormap
-    surface(x,y,z,props,'parent',cax)
+    ss = surface(x,y,z,props,'parent',cax)
         set(gca,'Color','k')
+        direction = [-1 -0.05 0]
+        rotate(ss,direction,58)
     hold on
     v=0; %initial velocity
 
@@ -253,7 +255,7 @@ comet(matrix(:,5),matrix(:,3)+6378.1363e3)
     th = linspace(0,2*pi) ; 
 R = (6564.03e3) ;
 x = R*cos(th-pi/2+pi/32) ; 
-y = -R*sin(th-pi/2+pi/32) ; 
+y = -R*sin(th-pi/2+pi/32) ;
 comet(x,y) ;
 
 hold off
