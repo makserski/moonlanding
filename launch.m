@@ -200,7 +200,7 @@ fprintf('to change the inclination of the orbit to one around the equator a velo
 
 figure (1)
 
-plot(matrix(:,6),matrix(:,1))
+plot(matrix(:,6),matrix(:,1)) %acceleration time
 
 title('acceleration')
 
@@ -210,7 +210,7 @@ ylabel('acceleration')
 
 figure (2)
 
-plot(matrix(:,6),matrix(:,2))
+plot(matrix(:,6),matrix(:,2)) %velocity time
 
 title('velocity time')
 
@@ -220,7 +220,7 @@ ylabel('velocity')
 
 figure (3)
 
-plot(matrix(:,6),matrix(:,3))
+plot(matrix(:,6),matrix(:,3)) %height time
 
 title('height time')
 
@@ -230,7 +230,7 @@ ylabel('height ')
 
 figure (4)
 
-plot(matrix(:,6),matrix(:,4))
+plot(matrix(:,6),matrix(:,4)) %angle time
 
 title('angle of the rocket')
 
@@ -240,7 +240,7 @@ ylabel('angel ')
 
 figure (5)
 
-plot(matrix(:,6),matrix(:,5))
+plot(matrix(:,6),matrix(:,5)) %displacement time graph
 
 title('displacement time')
 
@@ -249,7 +249,7 @@ xlabel('time (s)')
 ylabel('displacement')
 
 figure(6)
-plot(matrix(:,5),matrix(:,3))
+plot(matrix(:,5),matrix(:,3)) %displacement height
 
 xlabel('disp')
 
