@@ -1,4 +1,4 @@
-function [X_COORD, Y_COORD, VELOCITY, TIME] = translunar_injection(z)
+function [X_COORD, Y_COORD, TIME] = translunar_injection(z)
 
     %clear all
     
@@ -17,14 +17,14 @@ function [X_COORD, Y_COORD, VELOCITY, TIME] = translunar_injection(z)
     
     % Calculating the geometrical properties of the elliptical orbit during
     % the Hohmann transfer to the Moon
-    %
-    % here
+    
+    SEMI_MAJOR_AXIS = ((EARTH_MOON_DIST - MOON_ORBIT)+EARTH_ORBIT)/2; % (a)
+    SEMI_MINOR_AXIS = (0.5*sqrt((2*SEMI_MAJOR_AXIS)^2 - ((2*(SEMI_MAJOR_AXIS - EARTH_ORBIT))^2))); % (b)
+    ECCENTRICITY = (SEMI_MAJOR_AXIS - EARTH_ORBIT)/(sqrt(SEMI_MINOR_AXIS^2+(SEMI_MAJOR_AXIS - EARTH_ORBIT)^2));
     
     % Properties of the elliptical orbit during the Hohman transfer from
     % Earth's parking orbit to the large orbit which coincides with Moon's
     % orbit:
-    SEMI_MAJOR_AXIS = 194560e3; % (a)
-    SEMI_MINOR_AXIS = 50129.61e3; % (b)
     ECCENTRICITY = 0.966237; % Calculated from geometry (e)
     ASCENDING_NODE = 1.12; % Longitude of ascending node (OMEGA)
     ARG_PERICENTRE = 1.23; % Argument of pericentre (omega)
@@ -83,19 +83,16 @@ function [X_COORD, Y_COORD, VELOCITY, TIME] = translunar_injection(z)
     dNU = pi/(length(TIME)-1); 
     NU = 0:dNU:pi;
     
-    %VELOCITY(1) = 7.7889e+03;
     % Calculating the velocity of the spacecraft
     for i = 1:length(TIME)
         R(i) = sqrt((Y_COORD(i)^2)+((X_COORD(i)-EARTH_ORBIT)^2));
-%         VELOCITY(i) = sqrt((MASS_EARTH*G)*((2/R(i))-(1/SEMI_MAJOR_AXIS)));
         X_VELOCITY(i) = ((n*SEMI_MAJOR_AXIS)/r(i))*(SEMI_MINOR_AXIS*l2*cos(NU(i)) - SEMI_MAJOR_AXIS*l1*sin(NU(i)));
         Y_VELOCITY(i) = ((n*SEMI_MAJOR_AXIS)/r(i))*(SEMI_MINOR_AXIS*m2*cos(NU(i)) - SEMI_MAJOR_AXIS*m1*sin(NU(i)));
         VELOCITY(i) = sqrt(X_VELOCITY(i)^2+Y_VELOCITY(i)^2);
     end
-%     figure(2)
-%     plot(TIME,X_VELOCITY)
-    % Draw x and y which represent the path of the rocket in 2D
     
-    va = sqrt(((G*MASS_EARTH)/SEMI_MAJOR_AXIS)*((1-ECCENTRICITY)/(1+ECCENTRICITY)));
-    vp = sqrt(((G*MASS_EARTH)/SEMI_MAJOR_AXIS)*((1+ECCENTRICITY)/(1-ECCENTRICITY)));
+    VEL_APOGEE = sqrt(((G*MASS_EARTH)/SEMI_MAJOR_AXIS)*((1-ECCENTRICITY)/(1+ECCENTRICITY)));
+    % Velocity at the apogee
+    VEL_PERIGEE = sqrt(((G*MASS_EARTH)/SEMI_MAJOR_AXIS)*((1+ECCENTRICITY)/(1-ECCENTRICITY)));
+    % Velocity at the perigee
 end
