@@ -41,13 +41,13 @@ m0_PDI = m0 - Burn_time*dmdt;
 disp(m0_PDI)            
 
 h_l = 0; %initial height
-M_PDI = 15240; %inital mass
-F1=45000; %thrust 1
-matrix_lander=zeros(1,6);
+M_lander = 15092; %inital mass
+F1=45040; %thrust 1
+matrix_lander=zeros(1,7);
 t0= 0; 
 dt_lateral =0.1; %timestep
-massflow=14.76*dt_lateral; 
-time1 = 600; % time after first stage
+massflow1=14.76*dt_lateral; 
+time1 = 580; % time after first stage
 g = 1.62;
 angle = 0; %needed to run acceleration func
 v_lateral = 1609; %inital velocity
@@ -56,11 +56,11 @@ s_lateral=0; %iteration
 hh_lateral=0; %needed
 totalT=0; %time (neede)
 for t = t0:dt_lateral:time1
-    a = getacceleration(F1,M_PDI,g,angle,v_lateral,rho);
+    a = getacceleration(F1,M_lander,g,angle,v_lateral,rho);
     h_l = getheight(h_l,dt_lateral,v_lateral,angle);
     v_lateral=v_lateral-dt_lateral*a;
-    M_PDI = M_PDI - massflow;
-    matrix_lander = updatetable(s_lateral,a,v_lateral,h_l,angle,hh_lateral,totalT,matrix_lander);
+    M_lander = M_lander - massflow1;
+    matrix_lander = updatetable(s_lateral,a,v_lateral,h_l,angle,hh_lateral,totalT,matrix_lander,M_lander);
     s_lateral=1+s_lateral; %iteration counter for mattrix 
     totalT=totalT+dt_lateral; %x axis (stops it plotting in ms) (look at the plot functions)
 end
@@ -95,7 +95,8 @@ xlabel('Time (s)')
 
 ylabel('Distance (m) ')
 
-
+figure(4)
+plot(matrix_lander(:,6),matrix_lander(:,7))
 
 
 % works at F1 =15200 
@@ -107,12 +108,13 @@ ylabel('Distance (m) ')
 h_vertical = 15092; %initial height
 g_moon=1.62; %gravity
 M_lander = 8000; %inital mass after lateral burn
-F1_vertical=6840; %thrust 1
-F2_vertical=10942; %thrust 2
+F1_vertical=7210; %thrust 1
+F2_vertical=18000; %thrust 2
 matrix_lander=zeros(1,6);
 t0_vertical= 0; 
 dt_vertical =0.1; %timestep
-massflow=14.76*dt_vertical; 
+massflow2=1.5*dt_vertical; 
+massflow3 = 5*dt_vertical
 time1_vertical = 150; % time after first stage
 time2_vertical= 283;%landing time
 angle_vertical = 0; %needed to run acceleration func
@@ -120,13 +122,13 @@ v_vertical = 0; %inital velocity
 rho=0; %needed for acceleratiom
 s_vertical=0; %iteration
 hh_vertical=0; %needed
-totalT=587; %time (neede)
+
 for t = t0_vertical:dt_vertical:time1_vertical
     a = getacceleration(F1_vertical,M_lander,g_moon,angle_vertical,v_vertical,rho);
     h_vertical = getheight(h_vertical,dt_vertical,v_vertical,angle_vertical);
     v_vertical=v_vertical+dt_vertical*a;
-    M_lander = M_lander - massflow;
-    matrix_lander = updatetable(s_vertical,a,v_vertical,h_vertical,angle_vertical,hh_vertical,totalT,matrix_lander);
+    M_lander = M_lander - massflow2;
+    matrix_lander = updatetable(s_vertical,a,v_vertical,h_vertical,angle_vertical,hh_vertical,totalT,matrix_lander,M_lander);
     s_vertical=1+s_vertical; %iteration counter for mattrix 
     totalT=totalT+dt_vertical; %x axis (stops it plotting in ms) (look at the plot functions)
 end
@@ -135,13 +137,13 @@ for t = time1_vertical:dt_vertical:time2_vertical
     a = getacceleration(F2_vertical,M_lander,g_moon,angle_vertical,v_vertical,rho);
     h_vertical = getheight(h_vertical,dt_vertical,v_vertical,angle_vertical);
     v_vertical=v_vertical+dt_vertical*a;
-    M_lander = M_lander - massflow;
-    matrix_lander = updatetable(s_vertical,a,v_vertical,h_vertical,angle_vertical,hh_vertical,totalT,matrix_lander);
+    M_lander = M_lander - massflow3;
+    matrix_lander = updatetable(s_vertical,a,v_vertical,h_vertical,angle_vertical,hh_vertical,totalT,matrix_lander,M_lander);
     s_vertical=1+s_vertical;
     totalT=totalT+dt_vertical;
 end
 
-figure (4)
+figure (5)
 
 plot(matrix_lander(:,6),matrix_lander(:,1)) %plot time acceleration
 
@@ -151,7 +153,7 @@ xlabel('Time (s)')
 
 ylabel('Acceleration (m/s^2)')
 
-figure (5)
+figure (6)
 
 plot(matrix_lander(:,6),matrix_lander(:,2)) %plot time velocity
 
@@ -161,7 +163,7 @@ xlabel('Time (s)')
 
 ylabel('Velocity (m/s)')
 
-figure (6)
+figure (7)
 
 plot(matrix_lander(:,6),matrix_lander(:,3)) %plot height time 
 ylim([0 15500])
@@ -171,3 +173,5 @@ xlabel('Time (s)')
 
 ylabel('Altitude (m) ')
 
+figure(8)
+plot(matrix_lander(:,6),matrix_lander(:,7))
