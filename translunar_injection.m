@@ -1,5 +1,7 @@
 %function [X_COORD, Y_COORD] = translunar_injection()
 
+clear all
+
     EARTH_ORBIT = 6569.3e3; % Parking orbit of the Earth
     MOON_ORBIT = 1848e3; % Orbit of the Moon
     EARTH_MOON_DIST = 384400e3; % Distance from the Earth to the Moon
@@ -71,8 +73,12 @@
         VELOCITY(i+1) = sqrt((MASS_EARTH*G).*((2/R(i))-(1/SEMI_MAJOR_AXIS)));
     end
     figure(2)
-    plot(TIME,VELOCITY)
+    %plot(TIME,VELOCITY)
     % Draw x and y which represent the path of the rocket in 2D
+    for i = 1:length(TIME)-1
+        Vel(i+1) = sqrt((X_COORD(i+1)-X_COORD(i)).^2+((Y_COORD(i+1)-Y_COORD(i)).^2));
+    end
+    plot(TIME,Vel)
 %end
     va = sqrt(((G*MASS_EARTH)/SEMI_MAJOR_AXIS)*((1-ECCENTRICITY)/(1+ECCENTRICITY)))
     vp = sqrt(((G*MASS_EARTH)/SEMI_MAJOR_AXIS)*((1+ECCENTRICITY)/(1-ECCENTRICITY)))
