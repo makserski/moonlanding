@@ -32,7 +32,7 @@ F3 = 1028200; %stage 3 thrustm
 
 M = 2970000; % initial mass of ship
 
-matrix=zeros(1,4); % create the matrix that holds all the data
+matrix=zeros(); % create the matrix that holds all the data
 
 massflow1 = (2100000/160)*dt; % mass flow rate stage 1
 
