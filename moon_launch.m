@@ -22,7 +22,7 @@ F = 16000; % stage 1 thrust
 
 M = 4700; % initial mass of ship
 
-matrixmoon=zeros(4600,4); % create the matrix that holds all the data
+matrixmoon=zeros(); % create the matrix that holds all the data
 
 massflow1 = dt*2250/615 ;
 s=0; % variable to help index the matrix
