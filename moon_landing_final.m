@@ -1,3 +1,4 @@
+function [MASS, TIME, VELOCITY] = moon_landing_final()
 % clc
 % clear all                            
 
@@ -10,8 +11,6 @@
 %approcah to the lunar surface, where the PDI (Powered Descent Initiation)
 %is performed at roughly 15.2km. This is done by performing a retrograde
 %maneuver. The velocity of the 
-clc;
-clear all;
 Gconst = 6.67408e-11;               %Gravitational constant (m^3.kg^-1.s^-2)
 M_moon = 7.34767309e22;             %Mass of moon (kg)
 R_circular_orbit = 1848220;         %Radius of orbit around moon (m)
@@ -30,22 +29,22 @@ Thrust2 = 27000;                    %60% of max thrust
 Thrust3 = 4500;                     %10% of max thrust
 Angle = 90;                         %Angle in degrees
 deltaV_DOI = (Gconst*M_moon/R_circular_orbit)^0.5*((2*R_perigee/(R_circular_orbit+R_perigee))^0.5 - 1);    %Hohman transfer equation
-disp(abs(deltaV_DOI))               %DeltaV of DOI (m/s)
+%disp(abs(deltaV_DOI))               %DeltaV of DOI (m/s)
 Burn_time = -(m0 - m0*exp(abs(deltaV_DOI)/Ve))/(dmdt*exp(abs(deltaV_DOI)/Ve));     %Burn time for PDI
-disp(abs(Burn_time))                %Burn time for DOI (s)
+%disp(abs(Burn_time))                %Burn time for DOI (s)
 e = (R_apogee-R_perigee)/(R_apogee+R_perigee);
-disp(e)                             %Eccentricity of the orbit
+%disp(e)                             %Eccentricity of the orbit
 V_apogee = sqrt(Gconst*M_moon*(1+e)/R_perigee);
-disp(V_apogee)
+%disp(V_apogee)
 m0_PDI = m0 - Burn_time*dmdt;       
-disp(m0_PDI)            
+%disp(m0_PDI)            
 
 h_l = 0; %initial height
 M_lander = 15092; %inital mass
 F1=45040; %thrust 1
 matrix_lander=zeros(1,7);
 t0= 0; 
-dt_lateral =0.1; %timestep
+dt_lateral = 0.1; %timestep
 massflow1=14.76*dt_lateral; 
 time1 = 580; % time after first stage
 g = 1.62;
@@ -85,7 +84,9 @@ ylabel('Distance (m) ')
 
 figure(4)
 plot(matrix_lander(:,6),matrix_lander(:,7))
-
+title('Mass against time')
+xlabel('Time (s)')
+ylabel('Mass (kg)')
 
 % works at F1 =15200 
                                         % F2=26500
@@ -102,7 +103,7 @@ matrix_lander=zeros(1,6);
 t0_vertical= 0; 
 dt_vertical =0.1; %timestep
 massflow2=1.5*dt_vertical; 
-massflow3 = 5*dt_vertical
+massflow3 = 5*dt_vertical;
 time1_vertical = 150; % time after first stage
 time2_vertical= 283;%landing time
 angle_vertical = 0; %needed to run acceleration func
@@ -150,5 +151,11 @@ title('Altitude against time')
 xlabel('Time (s)')
 ylabel('Altitude (m) ')
 
-figure(8)
-plot(matrix_lander(:,6),matrix_lander(:,7))
+MASS = matrix_lander(:,7);
+TIME = matrix_lander(:,6);
+VELOCITY = matrix_lander(:,2);
+
+MASS = transpose(MASS);
+TIME = transpose(TIME);
+VELOCITY = transpose(VELOCITY);
+end
