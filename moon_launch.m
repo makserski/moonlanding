@@ -1,13 +1,14 @@
+function moon_launch
 clc
 clear
 
 %%Initial conditions
-
+totalT=0;
 v=0; %initial velocity
 
 hh=0; %displacement (not really needed)
 
-h=0; %initial height
+h=1737400; %initial height
 
 tstart=0; %time 0
 
@@ -21,26 +22,26 @@ F = 16000; % stage 1 thrust
 
 M = 4700; % initial mass of ship
 
-matrix=zeros(4600,4); % create the matrix that holds all the data
+matrixmoon=zeros(4600,4); % create the matrix that holds all the data
 
-massflow1 = dt*2250/615
-s=0 % variable to help index the matrix
+massflow1 = dt*2250/615 ;
+s=0; % variable to help index the matrix
 
-drag = 0
+drag = 0;
 
-angle_turn = 1.5*(90/650)*dt % the angle that the ship turns at
+angle_turn = 1.5*(90/650)*dt; % the angle that the ship turns at
 
-angle = 0
+angle = 0;
 
-Mmoon = 7.342*10^(22)
+Mmoon = 7.342*10^(22);
 
-orbit_dist = 90000
+orbit_dist = 1848220;
 
-G = 6.673*10^-11
+G = 6.673*10^-11;
 
-rho = 0
+rho = 0;
 
-speed_for_orbit = sqrt((Mmoon*G)/(orbit_dist+1737400)) % speed needed for orbit 
+speed_for_orbit = sqrt((Mmoon*G)/(orbit_dist)); % speed needed for orbit 
 
 for t = tstart:dt:t1
 
@@ -53,17 +54,9 @@ for t = tstart:dt:t1
     v=v+dt*a;
 
     M = M - massflow1;
+    matrixmoon = updatetable(s,a,v,h,angle,hh,totalT,matrixmoon);
 
-    matrix(1+s,1) = a; % these just update the matrix
-
-    matrix(1+s,2) = v;
-
-    matrix(1+s,3) = h;
-
-    matrix(1+s,4) = angle;
-
-    matrix(1+s,5) = hh;
-
+    totalT=totalT+dt;
     s=1+s;
 
     angle = angle + angle_turn;
@@ -98,50 +91,51 @@ end
 
 figure (1)
 
-plot(matrix(:,1))
+plot(matrixmoon(:,6),matrixmoon(:,1))
 
 title('acceleration')
 
-xlabel('time (ms)')
+xlabel('time (s)')
 
 ylabel('acceleration')
 
 figure (2)
 
-plot(matrix(:,2))
+plot(matrixmoon(:,6),matrixmoon(:,2))
 
 title('velocity time')
 
-xlabel('time (ms)')
+xlabel('time (s)')
 
 ylabel('velocity')
 
 figure (3)
 
-plot(matrix(:,3))
+plot(matrixmoon(:,6),matrixmoon(:,3))
 
 title('height time')
 
-xlabel('time (ms)')
+xlabel('time (s)')
 
 ylabel('height ')
 
 figure (4)
 
-plot(matrix(:,4))
+plot(matrixmoon(:,6),matrixmoon(:,4))
 
 title('angle of the rocket')
 
-xlabel('time (ms)')
+xlabel('time (s)')
 
 ylabel('angel ')
 
 figure (5)
 
-plot(matrix(:,5))
+plot(matrixmoon(:,6),matrixmoon(:,5))
 
 title('displacement time')
 
-xlabel('time (ms)')
+xlabel('time (s)')
 
 ylabel('displacement')
+end
