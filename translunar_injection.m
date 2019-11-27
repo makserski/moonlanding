@@ -1,6 +1,6 @@
-%function [X_COORD, Y_COORD, VELOCITY, TIME] = translunar_injection()
+function [X_COORD, Y_COORD, VELOCITY, TIME] = translunar_injection()
 
-    clear all
+    %clear all
     
     EARTH_ORBIT = 6569.3e3; % Parking orbit of the Earth
     MOON_ORBIT = 1848e3; % Orbit of the Moon
@@ -91,6 +91,7 @@
 %         VELOCITY(i) = sqrt((MASS_EARTH*G)*((2/R(i))-(1/SEMI_MAJOR_AXIS)));
         X_VELOCITY(i) = ((n*SEMI_MAJOR_AXIS)/r(i))*(SEMI_MINOR_AXIS*l2*cos(NU(i)) - SEMI_MAJOR_AXIS*l1*sin(NU(i)));
         Y_VELOCITY(i) = ((n*SEMI_MAJOR_AXIS)/r(i))*(SEMI_MINOR_AXIS*m2*cos(NU(i)) - SEMI_MAJOR_AXIS*m1*sin(NU(i)));
+        VELOCITY(i) = sqrt(X_VELOCITY(i)^2+Y_VELOCITY(i)^2);
     end
 %     figure(2)
 %     plot(TIME,X_VELOCITY)
@@ -98,4 +99,4 @@
     
     va = sqrt(((G*MASS_EARTH)/SEMI_MAJOR_AXIS)*((1-ECCENTRICITY)/(1+ECCENTRICITY)));
     vp = sqrt(((G*MASS_EARTH)/SEMI_MAJOR_AXIS)*((1+ECCENTRICITY)/(1-ECCENTRICITY)));
-%end
+end
