@@ -1,3 +1,4 @@
+function launch
 clc
 clear
 
@@ -7,7 +8,7 @@ v=0; %initial velocity
 
 hh=0; %displacement (not really needed)
 
-h=0; %initial height
+h=6371000; %initial height
 
 tstart=0; %time 0
 
@@ -49,15 +50,15 @@ angle = 0;
 
 Mearth = 5.97219*10^24;
 
-orbit_dist = 198300;
+orbit_dist = 6569300;
 
 G = 6.673*10^-11;
 
 di = 51.57;
 
-speed_for_orbit = sqrt((Mearth*G)/(orbit_dist+6371000)); % speed needed for orbit 
+speed_for_orbit = sqrt((Mearth*G)/(orbit_dist)); % speed needed for orbit 
 
-totalT =0
+totalT =0;
 
 for t = tstart:dt:t1
 
@@ -199,50 +200,59 @@ fprintf('to change the inclination of the orbit to one around the equator a velo
 
 figure (1)
 
-plot(matrix(:,1))
+plot(matrix(:,6),matrix(:,1))
 
 title('acceleration')
 
-xlabel('time (ms)')
+xlabel('time (s)')
 
 ylabel('acceleration')
 
 figure (2)
 
-plot(matrix(:,2))
+plot(matrix(:,6),matrix(:,2))
 
 title('velocity time')
 
-xlabel('time (ms)')
+xlabel('time (s)')
 
 ylabel('velocity')
 
 figure (3)
 
-plot(matrix(:,3))
+plot(matrix(:,6),matrix(:,3))
 
 title('height time')
 
-xlabel('time (ms)')
+xlabel('time (s)')
 
 ylabel('height ')
 
 figure (4)
 
-plot(matrix(:,4))
+plot(matrix(:,6),matrix(:,4))
 
 title('angle of the rocket')
 
-xlabel('time (ms)')
+xlabel('time (s)')
 
 ylabel('angel ')
 
 figure (5)
 
-plot(matrix(:,5))
+plot(matrix(:,6),matrix(:,5))
 
 title('displacement time')
 
-xlabel('time (ms)')
+xlabel('time (s)')
 
 ylabel('displacement')
+
+figure(6)
+plot(matrix(:,5),matrix(:,3))
+
+xlabel('disp')
+
+ylabel('height')
+
+end
