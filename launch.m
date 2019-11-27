@@ -1,52 +1,53 @@
-function launch
-clc
-clear
+function [MASS, TIME, VELOCITY] = launch()
+    % Function outputs mass and time arrays
+%clc
+%clear
 
 %%Initial conditions
-v=0; %initial velocity
-hh=0; %displacement (not really needed)
-h=6371000; %initial height
-tstart=0; %time 0
-dt=0.1; %timestep
+v = 0; %initial velocity
+hh = 0; %displacement (not really needed)
+h = 6371000; %initial height
+tstart = 0; %time 0
+dt = 0.1; % timestep
 rho = 0;
-t1=160; %time of stage 1 burn
+t1 = 160; %time of stage 1 burn
 t2 = 460; % time of stage 2 burn
 t3 = 990 ; % time of stage 3 burn
-g= 9.81; % g
+g = 9.81; % g
 F1 = 35100000; % stage 1 thrust
-F2 = 5141000; %stage 2 thrust 
-F3 = 1028200; %stage 3 thrustm
+F2 = 5141000; % stage 2 thrust 
+F3 = 1028200; % stage 3 thrustm
 M = 2970000; % initial mass of ship
 
-matrix=zeros(); % create the matrix that holds all the data
+matrix = zeros(); % create the matrix that holds all the data
 
 % mass flow rate stage 1
-massflow1= 12580*dt;
+massflow1 = 12580*dt;
 % mass flow rate stage  2
 massflow2 = 1137*dt;
   % mass flow rate stage  3
 massflow3 = 213*dt;
-s=0 ;% variable to help index the matrix
+s = 0;% variable to help index the matrix
 drag = 0;
 angle_turn = 1.4*(90/460)*dt; % the angle that the ship turns at
 angle = 0;
 Mearth = 5.97219*10^24;
 orbit_dist = 6569300;
-G = 6.673*10^-11;
+G = 6.673*10^(-11);
 di = 51.57;
 speed_for_orbit = sqrt((Mearth*G)/(orbit_dist)); % speed needed for orbit 
-totalT =0;
+totalT = 0;
 
 for t = tstart:dt:t1
     a = getacceleration(F1,M,g,angle,v,rho);
     h = getheight(h,dt,v,angle); %calculating height and dispalcemt 
     rho = density(h);
-    hh=hh+dt*v*sind(angle);
-    v=v+dt*a;
+    hh = hh+dt*v*sind(angle);
+    v = v+dt*a;
     M = M - massflow1;
     matrix = updatetable(s,a,v,h,angle,hh,totalT,matrix,M);
-    s=1+s;
-    totalT=totalT+dt;
+    s = 1+s;
+    totalT = totalT+dt;
     angle = angle + angle_turn;
 
                             % if the height is the target orbit height
@@ -65,18 +66,18 @@ for t = tstart:dt:t1
         F1 = 0;
     end
 end
-M = M - 200000; %loss of first stage
+M = M - 200000; % Separation of the first stage
 
 for t = t1:dt:t2
     a = getacceleration(F2,M,g,angle,v,rho); % this loop is the same as the firist one bit for the secind stage 
     h = getheight(h,dt,v,angle);
     rho = density(h);
     hh = hh+dt*v*sind(angle);
-    v=v+dt*a;
+    v = v+dt*a;
     M = M - massflow2;
     matrix = updatetable(s,a,v,h,angle,hh,totalT,matrix,M);
-    totalT=totalT+dt;
-    s=1+s;
+    totalT = totalT+dt;
+    s = 1+s;
     angle = angle + angle_turn;
 
     if h > orbit_dist
@@ -93,19 +94,19 @@ for t = t1:dt:t2
     end
 end
 
-M=M-160000;
+M = M-160000; % Separation of the second stage
 
 for t = t2:dt:t3
     a = getacceleration(F3,M,g,angle,v,rho); % this looop is the same as the firist one bit for the secind stage 
     h = getheight(h,dt,v,angle);
     rho = density(h);
-    hh=hh+dt*v*sind(angle);
-    v=v+dt*a;
+    hh = hh+dt*v*sind(angle);
+    v = v+dt*a;
     M = M - massflow3;
     matrix = updatetable(s,a,v,h,angle,hh,totalT,matrix,M);
 
-    s=1+s;
-    totalT=totalT+dt;
+    s = 1+s;
+    totalT = totalT+dt;
     
     if h > orbit_dist
         angle = 90;
@@ -122,49 +123,48 @@ for t = t2:dt:t3
 end
 
 dv = 2*v*sin(di/2); % velocity change to alter incliantion or orbit
-fprintf('to change the inclination of the orbit to one around the equator a velocity change of  %d m/s must be made towards the equator\n', dv);
-figure (1)
+fprintf('To change the inclination of the orbit to one around the equator a velocity change of  %d m/s must be made towards the equator\n', dv);
+figure(1)
 plot(matrix(:,6),matrix(:,1))
-title('acceleration')
-xlabel('time (s)')
-ylabel('acceleration')
+xlabel('Time (s)')
+ylabel('Acceleration')
 
-figure (2)
+figure(2)
 plot(matrix(:,6),matrix(:,2))
-title('velocity time')
-xlabel('time (s)')
-ylabel('velocity')
+xlabel('Time (s)')
+ylabel('Velocity')
 
-figure (3)
+figure(3)
 plot(matrix(:,6),matrix(:,3))
-title('height time')
-xlabel('time (s)')
-ylabel('height ')
+xlabel('Time (s)')
+ylabel('Height')
 
-figure (4)
+figure(4)
 plot(matrix(:,6),matrix(:,4))
 title('angle of the rocket')
-xlabel('time (s)')
-ylabel('angel ')
+xlabel('Time (s)')
+ylabel('Angle')
 
-figure (5)
+figure(5)
 plot(matrix(:,6),matrix(:,5))
-title('displacement time')
-xlabel('time (s)')
-ylabel('displacement')
+xlabel('Time (s)')
+ylabel('Displacement')
 
 figure(6)
 plot(matrix(:,5),matrix(:,3))
-xlabel('disp')
-ylabel('height')
+xlabel('Displacement')
+ylabel('Height')
 
-figure (8)
+figure(8)
 plot(matrix(:,6),matrix(:,7));
 xlabel('Time (s)')
 ylabel('Mass (kg)')
+
+MASS = matrix(:,7);
+TIME = matrix(:,6);
+VELOCITY = matrix(:,2);
+
+MASS = transpose(MASS);
+TIME = transpose(TIME);
+VELOCITY = transpose(VELOCITY);
 end
-
-
-
-
-

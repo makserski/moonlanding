@@ -1,5 +1,5 @@
-clc
-clear all                            
+% clc
+% clear all                            
 
 
 %%
@@ -65,34 +65,22 @@ for t = t0:dt_lateral:time1
     totalT=totalT+dt_lateral; %x axis (stops it plotting in ms) (look at the plot functions)
 end
 
-
 figure (1)
-
 plot(matrix_lander(:,6),matrix_lander(:,1)) %plot time acceleration
-
 title('Lateral acceleration against time')
-
 xlabel('Time (s)')
-
 ylabel('Acceleration (m/s^2)')
 
 figure (2)
-
 plot(matrix_lander(:,6),matrix_lander(:,2)) %plot time velocity
-
 title('Velocity against time')
-
 xlabel('Time (s)')
-
 ylabel('Velocity (m/s)')
 
 figure (3)
-
 plot(matrix_lander(:,6),matrix_lander(:,3)) %plot height time 
 title('Downrange distance against time')
-
 xlabel('Time (s)')
-
 ylabel('Distance (m) ')
 
 figure(4)
@@ -144,33 +132,22 @@ for t = time1_vertical:dt_vertical:time2_vertical
 end
 
 figure (5)
-
 plot(matrix_lander(:,6),matrix_lander(:,1)) %plot time acceleration
-
 title('Vertical acceleration against time')
-
 xlabel('Time (s)')
-
 ylabel('Acceleration (m/s^2)')
 
 figure (6)
-
 plot(matrix_lander(:,6),matrix_lander(:,2)) %plot time velocity
-
 title('Vertical velocity against time')
-
 xlabel('Time (s)')
-
 ylabel('Velocity (m/s)')
 
 figure (7)
-
 plot(matrix_lander(:,6),matrix_lander(:,3)) %plot height time 
 ylim([0 15500])
 title('Altitude against time')
-
 xlabel('Time (s)')
-
 ylabel('Altitude (m) ')
 
 figure(8)

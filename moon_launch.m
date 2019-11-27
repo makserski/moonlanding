@@ -1,8 +1,8 @@
 function moon_launch
-clc
-clear
-%%Initial conditions
-totalT=0;
+% clc
+% clear
+%% Initial conditions
+totalT = 0;
 v=0; %initial velocity
 hh=0; %displacement (not really needed)
 h=1737400; %initial height
@@ -22,7 +22,8 @@ Mmoon = 7.342*10^(22);
 orbit_dist = 1848220;
 G = 6.673*10^-11;
 rho = 0;
-speed_for_orbit = sqrt((Mmoon*G)/(orbit_dist)); % speed needed for orbit 
+speed_for_orbit = sqrt((Mmoon*G)/(orbit_dist)); % speed needed for orbit
+
 for t = tstart:dt:t1
     a = getacceleration(F,M_moon_launch,g,angle,v,rho);
     h = getheight(h,dt,v,angle); %calculating height and dispalcemt 

@@ -204,46 +204,30 @@ end
 M = M - 200000; %loss of first stage
 
 for t = t1:dt:t2
-
-     a = getacceleration(F2,M,g,angle,v,rho); % this looop is the same as the firist one bit for the secind stage 
-
-    h = getheight(h,dt,v,angle);
     
+    a = getacceleration(F2,M,g,angle,v,rho); % this looop is the same as the firist one bit for the secind stage 
+    h = getheight(h,dt,v,angle);
     rho = density(h);
-
     hh=hh+dt*v*sind(angle);
-
     v=v+dt*a;
-
     M = M - massflow2;
-
     matrix = updatetable(s,a,v,h,angle,hh,totalT,matrix);
-
     totalT=totalT+dt;
     s=1+s;
-
     angle = angle + angle_turn;
-
+    
     if h > orbit_dist
-
         angle = 90;
-
         angle_turn = 0;
-
     end
 
     if cosd(angle) < 0
-
         angle_turn = 0;
-
     end
 
     if v > speed_for_orbit
-
         F2 = 0;
-
     end
-
 end
 
 M=M-109000;
@@ -252,14 +236,14 @@ M=M-109000;
 
 comet(matrix(:,5),matrix(:,3)+6378.1363e3)
 % compute points corresponding to axis-oriented ellipse
-    th = linspace(0,2*pi) ; 
+th = linspace(0,2*pi) ; 
 R = (6564.03e3) ;
 x = R*cos(th-pi/2+pi/32) ; 
 y = -R*sin(th-pi/2+pi/32) ;
 comet(x,y) ;
 
 hold off
-    colormap(topomap1)
+colormap(topomap1)
     
 % Replace the calls to surface and colormap with these lines if you do 
 % not want the Earth's topography displayed.

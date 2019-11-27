@@ -43,10 +43,10 @@ tstart_lateral = 0;                 %Start time (s)
 dt = 1;                             %Time step (s)
 tstop_lateral = 500;                %End time (s)
 t_lateral = tstart_lateral:dt:tstop_lateral;
-    deltav_lander_lateral = Ve.*log(m0_PDI./(m0_PDI - dmdt.*t_lateral));
-    disp(max(deltav_lander_lateral))        %DeltaV of the LM
+deltav_lander_lateral = Ve.*log(m0_PDI./(m0_PDI - dmdt.*t_lateral));
+disp(max(deltav_lander_lateral))        %DeltaV of the LM
     
-    m_at_t_lateral = m0_PDI.*exp(-deltav_lander_lateral./Ve);
+m_at_t_lateral = m0_PDI.*exp(-deltav_lander_lateral./Ve);
                                     %Mass at time t of the LM
 decceleration_lateral = Thrust1./m_at_t_lateral;
 
